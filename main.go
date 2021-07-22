@@ -1,13 +1,19 @@
 package main
 
 import (
-	"io"
+	"Shopee_UMS/api"
+	"Shopee_UMS/usecases"
+	"flag"
+	"log"
 	"net/http"
 )
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, "Hello world!")
-	})
-	http.ListenAndServe(":8000", nil)
+	port := flag.String("port", ":8000", "port number to accept api requests")
+	flag.Parse()
+
+	u := usecases.New(nil, nil, nil)
+	s := api.NewServer(u)
+
+	log.Fatal(http.ListenAndServe(*port, s))
 }

@@ -2,6 +2,7 @@ package api
 
 import (
 	"Shopee_UMS/entities"
+	"Shopee_UMS/utils"
 	"net/http"
 )
 
@@ -17,15 +18,18 @@ func (s *Server) handleTokenLogin() http.HandlerFunc {
 		}
 
 		var req request
-		err := decodeBody(r, &req)
-		if err != nil {
+		if err := decodeBody(r, &req); err != nil {
 			respondErr(w, r, http.StatusBadRequest, err)
 			return
 		}
 
-		err = s.u.Auth.Authenticate(req.Username, req.Password)
+		uid, err := s.u.Auth.Authenticate(req.Username, req.Password)
 		if err != nil {
-			respondErr(w, r, http.StatusBadRequest, err)
+			if _, ok := err.(utils.AuthError); ok {
+				respondErr(w, r, http.StatusBadRequest, err)
+				return
+			}
+			respondHTTPErr(w, r, http.StatusInternalServerError)
 			return
 		}
 
@@ -34,16 +38,22 @@ func (s *Server) handleTokenLogin() http.HandlerFunc {
 			respondHTTPErr(w, r, http.StatusInternalServerError)
 			return
 		}
-		token, err := auth.GenerateToken(map[string]string{
-			"username": req.Username,
+		token, err := auth.GenerateToken(map[string]interface{}{
+			"uid": uid,
 		})
 		if err != nil {
 			respondHTTPErr(w, r, http.StatusInternalServerError)
 			return
 		}
 
+		user, err := s.u.User.GetData(uid)
+		if err != nil {
+			respondHTTPErr(w, r, http.StatusInternalServerError)
+			return
+		}
+
 		setAuthToken(w, token)
-		respond(w, r, http.StatusOK, nil)
+		respond(w, r, http.StatusOK, user)
 	}
 }
 

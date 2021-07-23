@@ -40,7 +40,7 @@ func respondHTTPErr(w http.ResponseWriter, r *http.Request, status int) {
 var AuthTokenExpSeconds, _ = strconv.Atoi(os.Getenv("AUTH_TOKEN_EXPIRATION_SECONDS"))
 
 func setAuthToken(w http.ResponseWriter, token string) {
-	exp := time.Now().Local().Add(time.Duration(AuthTokenExpSeconds) * time.Second)
+	exp := time.Now().UTC().Add(time.Duration(AuthTokenExpSeconds) * time.Second)
 	cookie := http.Cookie{
 		Name:     "auth-token",
 		Value:    token,

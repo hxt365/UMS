@@ -8,13 +8,18 @@ import (
 
 type accountRepoStub struct{}
 
-func (ar *accountRepoStub) GetHashPassword(string) string {
+func (ar *accountRepoStub) Get(username string) (*AccountData, error) {
 	hash, _ := bcrypt.GenerateFromPassword([]byte("secretpassword"), bcrypt.MinCost)
-	return string(hash)
+	return &AccountData{
+		Id:       1,
+		Username: "user",
+		Password: string(hash),
+	}, nil
 }
 
-func TestAuthUsecase_Authenticate(t *testing.T) {
+func TestAuthenticate(t *testing.T) {
 	au := &authUsecase{accounts: &accountRepoStub{}}
-	err := au.Authenticate("username", "secretpassword")
+	uid, err := au.Authenticate("username", "secretpassword")
 	assert.Nil(t, err, "wrong password")
+	assert.Equal(t, 1, uid)
 }

@@ -1,4 +1,4 @@
-package test_utils
+package utils
 
 import (
 	"crypto/rsa"
@@ -20,12 +20,12 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJWfBtPwa57GaXFQbdkNsmCFmF0NEMbs
 aHo9DrUkA6W8df6kJ1ZbsWC4Qx8PchNEA4pOOrxikoIvq1slbksjTb8CAwEAAQ==
 -----END PUBLIC KEY-----`
 
-func GenRSAPrivateKey() *rsa.PrivateKey {
+func SampleRSAPrivateKey() *rsa.PrivateKey {
 	key, _ := jwt.ParseRSAPrivateKeyFromPEM([]byte(sampleSecretKey))
 	return key
 }
 
-func GenRSAPublicKey() *rsa.PublicKey {
+func SampleRSAPublicKey() *rsa.PublicKey {
 	key, _ := jwt.ParseRSAPublicKeyFromPEM([]byte(samplePublicKey))
 	return key
 }

@@ -1,7 +1,7 @@
 package entities
 
 import (
-	"Shopee_UMS/test_utils"
+	"Shopee_UMS/utils"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/crypto/bcrypt"
 	"testing"
@@ -21,7 +21,7 @@ func TestAuthenticator_CheckPasswordHash(t *testing.T) {
 		if tt.expect {
 			hash, _ = bcrypt.GenerateFromPassword([]byte(tt.pwd), bcrypt.MinCost)
 		}
-		if CheckPasswordHash(string(hash), tt.pwd) != tt.expect {
+		if VerifyPassword(string(hash), tt.pwd) != tt.expect {
 			assert.Equal(t, tt.expect, !tt.expect, "wrong hash password")
 		}
 	}
@@ -29,13 +29,13 @@ func TestAuthenticator_CheckPasswordHash(t *testing.T) {
 
 func TestJwtAuthenticator_GenerateToken(t *testing.T) {
 	j := &JwtAuthenticator{
-		SecretKey:  test_utils.GenRSAPrivateKey(),
-		PublicKey:  test_utils.GenRSAPublicKey(),
+		SecretKey:  utils.SampleRSAPrivateKey(),
+		PublicKey:  utils.SampleRSAPublicKey(),
 		ExpSeconds: 60,
 		Issuer:     "UMS",
 	}
-	claim := map[string]string{
-		"username": "John Doe",
+	claim := map[string]interface{}{
+		"uid": 1,
 	}
 	token, err := j.GenerateToken(claim)
 	assert.Nil(t, err, "could not generate token")
@@ -43,6 +43,6 @@ func TestJwtAuthenticator_GenerateToken(t *testing.T) {
 	extractClaim, err := j.ValidateToken(token)
 	jwtClaim, ok := extractClaim.(*JwtClaim)
 	assert.True(t, ok, "could not convert extracted claim to JwtClaim")
-	assert.Equal(t, jwtClaim.Username, "John Doe")
+	assert.Equal(t, jwtClaim.Uid, 1)
 	assert.Equal(t, jwtClaim.Issuer, "UMS")
 }

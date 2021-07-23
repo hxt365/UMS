@@ -1,6 +1,6 @@
 package usecases
 
-import "Shopee_UMS/entities"
+import "mime/multipart"
 
 type Usecases struct {
 	Auth AuthUsecaser
@@ -18,15 +18,15 @@ func New(ar AccountRepository, ur UserRepository, ss StaticStorage) *Usecases {
 }
 
 type UserRepository interface {
-	GetByUsername(username string) (*entities.User, error)
-	UpdateNickname(username, nickname string) error
-	UpdateProfileUri(username, url string) error
+	Get(uid int) (*UserData, error)
+	UpdateNickname(uid int, nickname string) error
+	UpdateProfilePicUri(uid int, url string) error
 }
 
 type AccountRepository interface {
-	GetHashPassword(username string) string
+	Get(username string) (*AccountData, error)
 }
 
 type StaticStorage interface {
-	UploadFile(data []byte, name string) (string, error)
+	UploadFile(data multipart.File, name string) (string, error)
 }

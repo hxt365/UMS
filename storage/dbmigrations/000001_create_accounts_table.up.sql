@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS accounts
+(
+    id         int PRIMARY KEY AUTO_INCREMENT,
+    username   varchar(255) UNIQUE NOT NULL,
+    password   varchar(255)        NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

@@ -1,0 +1,3 @@
+- id: 1
+  username: user1
+  password: $2y$04$A2Tzb8z9KqiPAsn6NiNd9OjpvppNkrA/kqXaB.muKBjfXZVfsmUdq # hash of secret

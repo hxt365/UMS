@@ -16,7 +16,7 @@ type User struct {
 }
 
 func ValidateUserNickname(name string) error {
-	if len(name) > 50 {
+	if len(name) > 255 {
 		return utils.ValidationError{"nickname is too long"}
 	}
 	return nil

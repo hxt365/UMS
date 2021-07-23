@@ -21,10 +21,11 @@ func (u *Users) Get(uid int) (*usecases.UserData, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	q := `SELECT a.id, u.username, u.nickname, u.profile_picture_uri
-		FROM users u
-		JOIN accounts a ON u.account_id = a.id
-		WHERE u.username = ?`
+	q := `SELECT a.id, a.username, u.nickname, u.profile_picture_uri
+FROM users u
+JOIN accounts a ON u.account_id = a.id
+WHERE u.id = ?
+`
 	err := u.db.QueryRowContext(ctx, q, uid).Scan(&ud.Id, &ud.Username, &ud.Nickname, &ud.ProfilePicUri)
 	if err != nil {
 		return nil, err
@@ -44,7 +45,7 @@ func (u *Users) UpdateNickname(uid int, nickname string) error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.ExecContext(ctx, uid, nickname)
+	_, err = stmt.ExecContext(ctx, nickname, uid)
 	return err
 }
 
@@ -59,6 +60,6 @@ func (u *Users) UpdateProfilePicUri(uid int, uri string) error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.ExecContext(ctx, uid, uri)
+	_, err = stmt.ExecContext(ctx, uri, uid)
 	return err
 }

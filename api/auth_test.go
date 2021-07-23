@@ -80,21 +80,3 @@ func TestAuth_LogoutFailDueToUnauthenticated(t *testing.T) {
 	s.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusUnauthorized, w.Code)
 }
-
-func login(t *testing.T, s *Server) *httptest.ResponseRecorder {
-	reqJson := `{"username": "user", "password": "secret"}`
-	req := httptest.NewRequest("POST", "/api/auth/login", strings.NewReader(reqJson))
-	w := httptest.NewRecorder()
-	s.ServeHTTP(w, req)
-	assert.Equal(t, http.StatusOK, w.Code)
-	return w
-}
-
-func extractAuthCookie(w *httptest.ResponseRecorder) *http.Cookie {
-	for _, c := range w.Result().Cookies() {
-		if c.Name == "auth-token" {
-			return c
-		}
-	}
-	return nil
-}

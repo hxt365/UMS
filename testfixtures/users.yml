@@ -1,0 +1,4 @@
+- id: 1
+  account_id: 1
+  nickname: nickname
+  profile_picture_uri: s3://somewhere.com

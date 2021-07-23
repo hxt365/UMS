@@ -3,15 +3,10 @@ package api
 import (
 	"Shopee_UMS/usecases"
 	"Shopee_UMS/utils"
-	"bytes"
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
-	"io"
-	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
-	"os"
-	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -140,20 +135,4 @@ func TestUploadProfilePictureFailDueToUnsupportedFile(t *testing.T) {
 	w = httptest.NewRecorder()
 	s.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
-}
-
-func loadFileBody(t *testing.T, path string) (*bytes.Buffer, string) {
-	file, err := os.Open(path)
-	assert.Nil(t, err, "could not open test photo")
-	defer file.Close()
-
-	body := &bytes.Buffer{}
-	writer := multipart.NewWriter(body)
-	defer writer.Close()
-	part, err := writer.CreateFormFile("profilePicture", filepath.Base(path))
-	assert.Nil(t, err, "could not create form file")
-	_, err = io.Copy(part, file)
-	assert.Nil(t, err, "could not write file to part")
-
-	return body, writer.FormDataContentType()
 }

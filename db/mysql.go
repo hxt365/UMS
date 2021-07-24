@@ -1,11 +1,11 @@
-package storage
+package db
 
 import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func NewDB(dialect, dsn string, idleConn, maxConn int) (*sql.DB, error) {
+func New(dialect, dsn string, idleConn, maxConn int) (*sql.DB, error) {
 	db, err := sql.Open(dialect, dsn)
 	if err != nil {
 		return nil, err

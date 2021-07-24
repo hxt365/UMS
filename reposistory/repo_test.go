@@ -1,7 +1,7 @@
 package reposistory
 
 import (
-	"Shopee_UMS/storage"
+	database "Shopee_UMS/db"
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
@@ -27,7 +27,7 @@ func TestMain(m *testing.M) {
 	testPwd := os.Getenv("DATABASE_PASSWORD")
 
 	var err error
-	db, err = storage.NewDB("mysql",
+	db, err = database.New("mysql",
 		fmt.Sprintf("%s:%s@tcp(localhost:%s)/%s", testUser, testPwd, dbPort, testDB),
 		10, 10)
 	if err != nil {
@@ -44,7 +44,7 @@ func TestMain(m *testing.M) {
 	}
 
 	mg, err = migrate.New(
-		"file://../storage/dbmigrations",
+		"file://../db/migrations",
 		fmt.Sprintf("mysql://%s:%s@tcp(localhost:%s)/%s", testUser, testPwd, dbPort, testDB),
 	)
 	if err != nil {

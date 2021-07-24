@@ -28,5 +28,5 @@ type AccountRepository interface {
 }
 
 type StaticStorage interface {
-	UploadFile(data multipart.File, name string) (string, error)
+	UploadFile(file multipart.File, name string) (string, error)
 }

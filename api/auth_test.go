@@ -63,11 +63,13 @@ func TestAuth_Logout(t *testing.T) {
 	w := login(t, s)
 	req := httptest.NewRequest("POST", "/api/auth/logout", nil)
 	req.AddCookie(extractAuthCookie(w))
+	req.Header.Add("X-CSRFToken", w.Header().Get("X-CSRFToken"))
 	w = httptest.NewRecorder()
 	s.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	authCookie := extractAuthCookie(w)
+	assert.NotNil(t, authCookie)
 	assert.Equal(t, "", authCookie.Value)
 	assert.True(t, authCookie.Expires.Before(time.Now().UTC()))
 }
@@ -79,4 +81,15 @@ func TestAuth_LogoutFailDueToUnauthenticated(t *testing.T) {
 	w := httptest.NewRecorder()
 	s.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusUnauthorized, w.Code)
+}
+
+func TestAuth_LogoutFailDueToCSRF(t *testing.T) {
+	s := NewTestServer(&authUsecaseStub{}, &userUsecaseStub{})
+
+	w := login(t, s)
+	req := httptest.NewRequest("POST", "/api/auth/logout", nil)
+	req.AddCookie(extractAuthCookie(w))
+	w = httptest.NewRecorder()
+	s.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusForbidden, w.Code)
 }

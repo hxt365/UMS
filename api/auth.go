@@ -38,8 +38,10 @@ func (s *Server) handleTokenLogin() http.HandlerFunc {
 			respondHTTPErr(w, r, http.StatusInternalServerError)
 			return
 		}
-		token, err := auth.GenerateToken(map[string]interface{}{
-			"uid": uid,
+		csrfToken := utils.RandString(32)
+		authToken, err := auth.GenerateToken(map[string]interface{}{
+			"uid":  uid,
+			"csrf": csrfToken,
 		})
 		if err != nil {
 			respondHTTPErr(w, r, http.StatusInternalServerError)
@@ -52,7 +54,8 @@ func (s *Server) handleTokenLogin() http.HandlerFunc {
 			return
 		}
 
-		setAuthToken(w, token)
+		setAuthToken(w, authToken)
+		setCsrfToken(w, csrfToken)
 		respond(w, r, http.StatusOK, user)
 	}
 }

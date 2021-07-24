@@ -37,6 +37,7 @@ func TestGetProfile(t *testing.T) {
 	w := login(t, s)
 	req := httptest.NewRequest("GET", "/api/profile", nil)
 	req.AddCookie(extractAuthCookie(w))
+	req.Header.Add("X-CSRFToken", w.Header().Get("X-CSRFToken"))
 	w = httptest.NewRecorder()
 	s.ServeHTTP(w, req)
 
@@ -76,6 +77,7 @@ func TestChangeNickName(t *testing.T) {
 	reqJson := `{"nickname": "abcdef"}`
 	req := httptest.NewRequest("PUT", "/api/profile", strings.NewReader(reqJson))
 	req.AddCookie(extractAuthCookie(w))
+	req.Header.Add("X-CSRFToken", w.Header().Get("X-CSRFToken"))
 	w = httptest.NewRecorder()
 	s.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -88,6 +90,18 @@ func TestChangeNickName(t *testing.T) {
 	assert.Equal(t, "s3://something.com", user.ProfilePicUri)
 }
 
+func TestChangeNickNameFailDueToCSRF(t *testing.T) {
+	s := NewTestServer(&authUsecaseStub{}, &userUsecaseStub{})
+
+	w := login(t, s)
+	reqJson := `{"nickname": "abcdef"}`
+	req := httptest.NewRequest("PUT", "/api/profile", strings.NewReader(reqJson))
+	req.AddCookie(extractAuthCookie(w))
+	w = httptest.NewRecorder()
+	s.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusForbidden, w.Code)
+}
+
 func TestUploadProfilePicture(t *testing.T) {
 	s := NewTestServer(&authUsecaseStub{}, &userUsecaseStub{})
 	photoPath := "./../assets/test_photo.png"
@@ -96,6 +110,7 @@ func TestUploadProfilePicture(t *testing.T) {
 	body, contentType := loadFileBody(t, photoPath)
 	req := httptest.NewRequest("POST", "/api/profile", body)
 	req.Header.Set("Content-Type", contentType)
+	req.Header.Add("X-CSRFToken", w.Header().Get("X-CSRFToken"))
 	req.AddCookie(extractAuthCookie(w))
 	w = httptest.NewRecorder()
 	s.ServeHTTP(w, req)
@@ -117,6 +132,7 @@ func TestUploadProfilePictureFailDueToTooLargePhoto(t *testing.T) {
 	body, contentType := loadFileBody(t, photoPath)
 	req := httptest.NewRequest("POST", "/api/profile", body)
 	req.Header.Set("Content-Type", contentType)
+	req.Header.Add("X-CSRFToken", w.Header().Get("X-CSRFToken"))
 	req.AddCookie(extractAuthCookie(w))
 	w = httptest.NewRecorder()
 	s.ServeHTTP(w, req)
@@ -131,6 +147,7 @@ func TestUploadProfilePictureFailDueToUnsupportedFile(t *testing.T) {
 	body, contentType := loadFileBody(t, photoPath)
 	req := httptest.NewRequest("POST", "/api/profile", body)
 	req.Header.Set("Content-Type", contentType)
+	req.Header.Add("X-CSRFToken", w.Header().Get("X-CSRFToken"))
 	req.AddCookie(extractAuthCookie(w))
 	w = httptest.NewRecorder()
 	s.ServeHTTP(w, req)

@@ -35,6 +35,25 @@ func (s *Server) withJwtAuth(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		ctx := context.WithValue(r.Context(), "uid", jwtClaim.Uid)
+		ctx = context.WithValue(ctx, "csrf", jwtClaim.CsrfToken)
 		next(w, r.WithContext(ctx))
+	}
+}
+
+// withCSRF must be after withJwtAuth
+func (s *Server) withCSRF(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case "POST", "PUT", "PATCH", "DELETE":
+			csrfHeader := r.Header.Get("X-CSRFToken")
+			csrfToken := r.Context().Value("csrf")
+			if csrfToken != csrfHeader {
+				respondHTTPErr(w, r, http.StatusForbidden)
+				return
+			}
+			next(w, r)
+		default:
+			next(w, r)
+		}
 	}
 }

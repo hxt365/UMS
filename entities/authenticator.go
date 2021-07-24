@@ -32,7 +32,8 @@ func (j *JwtAuthenticator) Authenticate(credentials ...string) (Claim, error) {
 }
 
 type JwtClaim struct {
-	Uid int
+	Uid       int
+	CsrfToken string
 	jwt.StandardClaims
 }
 
@@ -50,8 +51,18 @@ func (j *JwtAuthenticator) GenerateToken(claim Claim) (string, error) {
 		return "", fmt.Errorf("user id in JWT claim should be int")
 	}
 
+	_, ok = claimMap["csrf"]
+	if !ok {
+		return "", fmt.Errorf("missing CSRF token in JWT claim")
+	}
+	csrfToken, ok := claimMap["csrf"].(string)
+	if !ok {
+		return "", fmt.Errorf("CSRF token in JWT claim should be string")
+	}
+
 	jwtClaim := &JwtClaim{
-		Uid: uid,
+		Uid:       uid,
+		CsrfToken: csrfToken,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().UTC().Add(time.Duration(j.ExpSeconds) * time.Second).Unix(),
 			Issuer:    j.Issuer,

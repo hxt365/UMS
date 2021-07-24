@@ -51,6 +51,10 @@ func setAuthToken(w http.ResponseWriter, token string) {
 	http.SetCookie(w, &cookie)
 }
 
+func setCsrfToken(w http.ResponseWriter, token string) {
+	w.Header().Set("X-CSRFToken", token)
+}
+
 func removeAuthToken(w http.ResponseWriter) {
 	cookie := http.Cookie{
 		Name:     "auth-token",

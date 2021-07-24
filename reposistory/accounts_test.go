@@ -7,7 +7,8 @@ import (
 )
 
 func TestAccounts_Get(t *testing.T) {
-	prepareTestDB()
+	setup()
+	defer tearDown()
 	repo := NewAccounts(db)
 	acc, err := repo.Get("user1")
 	assert.Nil(t, err)

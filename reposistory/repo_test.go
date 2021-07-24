@@ -6,6 +6,9 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-testfixtures/testfixtures/v3"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/mysql"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"log"
 	"os"
 	"testing"
@@ -14,15 +17,18 @@ import (
 var (
 	db       *sql.DB
 	fixtures *testfixtures.Loader
+	mg       *migrate.Migrate
 )
 
 func TestMain(m *testing.M) {
 	dbPort := os.Getenv("DATABASE_PORT")
 	testDB := os.Getenv("TEST_DATABASE_NAME")
+	testUser := os.Getenv("DATABASE_USER")
+	testPwd := os.Getenv("DATABASE_PASSWORD")
 
 	var err error
 	db, err = storage.NewDB("mysql",
-		fmt.Sprintf("testuser:test@tcp(localhost:%s)/%s", dbPort, testDB),
+		fmt.Sprintf("%s:%s@tcp(localhost:%s)/%s", testUser, testPwd, dbPort, testDB),
 		10, 10)
 	if err != nil {
 		log.Fatal("could not connect to test DB", err)
@@ -37,11 +43,35 @@ func TestMain(m *testing.M) {
 		log.Fatal("could not create fixtures", err)
 	}
 
+	mg, err = migrate.New(
+		"file://../storage/dbmigrations",
+		fmt.Sprintf("mysql://%s:%s@tcp(localhost:%s)/%s", testUser, testPwd, dbPort, testDB),
+	)
+	if err != nil {
+		log.Fatal("could not create migrate", err)
+	}
+
+	if err := mg.Down(); err != nil && !noChangeErr(err) {
+		log.Fatal("could not migrate down", err)
+	}
 	os.Exit(m.Run())
 }
 
-func prepareTestDB() {
+func setup() {
+	if err := mg.Up(); err != nil && !noChangeErr(err) {
+		log.Fatal("could not migrate up", err)
+	}
 	if err := fixtures.Load(); err != nil {
 		log.Fatal("could not load fixtures", err)
 	}
+}
+
+func tearDown() {
+	if err := mg.Down(); err != nil && !noChangeErr(err) {
+		log.Fatal("could not migrate down", err)
+	}
+}
+
+func noChangeErr(err error) bool {
+	return err.Error() == "no change"
 }

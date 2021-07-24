@@ -6,7 +6,8 @@ import (
 )
 
 func TestUsers_Get(t *testing.T) {
-	prepareTestDB()
+	setup()
+	defer tearDown()
 	repo := NewUsers(db)
 	u, err := repo.Get(1)
 	assert.Nil(t, err)
@@ -17,7 +18,8 @@ func TestUsers_Get(t *testing.T) {
 }
 
 func TestUsers_UpdateNickname(t *testing.T) {
-	prepareTestDB()
+	setup()
+	defer tearDown()
 	repo := NewUsers(db)
 	err := repo.UpdateNickname(1, "new nickname")
 	assert.Nil(t, err)
@@ -29,7 +31,8 @@ func TestUsers_UpdateNickname(t *testing.T) {
 }
 
 func TestUsers_UpdateProfilePicUri(t *testing.T) {
-	prepareTestDB()
+	setup()
+	defer tearDown()
 	repo := NewUsers(db)
 	err := repo.UpdateProfilePicUri(1, "s3://newlocation")
 	assert.Nil(t, err)

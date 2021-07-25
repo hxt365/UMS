@@ -3,6 +3,8 @@ package utils
 import (
 	"crypto/rsa"
 	"github.com/dgrijalva/jwt-go"
+	"io/ioutil"
+	"log"
 )
 
 const sampleSecretKey = `-----BEGIN RSA PRIVATE KEY-----
@@ -28,4 +30,28 @@ func SampleRSAPrivateKey() *rsa.PrivateKey {
 func SampleRSAPublicKey() *rsa.PublicKey {
 	key, _ := jwt.ParseRSAPublicKeyFromPEM([]byte(samplePublicKey))
 	return key
+}
+
+func ReadRSAPrivateKey(filepath string) *rsa.PrivateKey {
+	key, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		log.Fatal("could not load RSA private key", err)
+	}
+	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM(key)
+	if err != nil {
+		log.Fatal("could not parse RSA private key", err)
+	}
+	return privateKey
+}
+
+func ReadRSAPublicKey(filepath string) *rsa.PublicKey {
+	key, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		log.Fatal("could not load RSA public key", err)
+	}
+	publicKey, err := jwt.ParseRSAPublicKeyFromPEM(key)
+	if err != nil {
+		log.Fatal("could not parse RSA public key", err)
+	}
+	return publicKey
 }

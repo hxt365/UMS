@@ -29,13 +29,14 @@ func TestAuthenticator_CheckPasswordHash(t *testing.T) {
 
 func TestJwtAuthenticator_GenerateToken(t *testing.T) {
 	j := &JwtAuthenticator{
-		SecretKey:  utils.SampleRSAPrivateKey(),
+		PrivateKey: utils.SampleRSAPrivateKey(),
 		PublicKey:  utils.SampleRSAPublicKey(),
 		ExpSeconds: 60,
 		Issuer:     "UMS",
 	}
 	claim := map[string]interface{}{
-		"uid": 1,
+		"uid":  1,
+		"csrf": "sometoken",
 	}
 	token, err := j.GenerateToken(claim)
 	assert.Nil(t, err, "could not generate token")

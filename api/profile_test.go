@@ -108,7 +108,7 @@ func TestUploadProfilePicture(t *testing.T) {
 
 	w := login(t, s)
 	body, contentType := loadFileBody(t, photoPath)
-	req := httptest.NewRequest("POST", "/api/profile", body)
+	req := httptest.NewRequest("POST", "/api/profile-picture", body)
 	req.Header.Set("Content-Type", contentType)
 	req.Header.Add("X-CSRFToken", w.Header().Get("X-CSRFToken"))
 	req.AddCookie(extractAuthCookie(w))
@@ -130,7 +130,7 @@ func TestUploadProfilePictureFailDueToTooLargePhoto(t *testing.T) {
 
 	w := login(t, s)
 	body, contentType := loadFileBody(t, photoPath)
-	req := httptest.NewRequest("POST", "/api/profile", body)
+	req := httptest.NewRequest("POST", "/api/profile-picture", body)
 	req.Header.Set("Content-Type", contentType)
 	req.Header.Add("X-CSRFToken", w.Header().Get("X-CSRFToken"))
 	req.AddCookie(extractAuthCookie(w))
@@ -145,7 +145,7 @@ func TestUploadProfilePictureFailDueToUnsupportedFile(t *testing.T) {
 
 	w := login(t, s)
 	body, contentType := loadFileBody(t, photoPath)
-	req := httptest.NewRequest("POST", "/api/profile", body)
+	req := httptest.NewRequest("POST", "/api/profile-picture", body)
 	req.Header.Set("Content-Type", contentType)
 	req.Header.Add("X-CSRFToken", w.Header().Get("X-CSRFToken"))
 	req.AddCookie(extractAuthCookie(w))

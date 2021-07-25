@@ -2,6 +2,7 @@ package reposistory
 
 import (
 	"Shopee_UMS/storage"
+	"Shopee_UMS/utils"
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
@@ -12,8 +13,8 @@ import (
 func TestStatics_UploadFile(t *testing.T) {
 	s3, err := storage.New()
 	assert.Nil(t, err, "could not connect to AWS S3")
-	bucketName := os.Getenv("S3_BUCKET_TEST_NAME")
-	repo := NewStatics(s3, bucketName)
+	bucketName := utils.MustEnv("TEST_S3_BUCKET_NAME")
+	repo := NewTestStatics(s3)
 
 	file, err := os.Open("../assets/small.txt")
 	assert.Nil(t, err, "could not load sample test file")

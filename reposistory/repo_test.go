@@ -2,6 +2,7 @@ package reposistory
 
 import (
 	database "Shopee_UMS/db"
+	"Shopee_UMS/utils"
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
@@ -21,15 +22,8 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	dbPort := os.Getenv("DATABASE_PORT")
-	testDB := os.Getenv("TEST_DATABASE_NAME")
-	testUser := os.Getenv("DATABASE_USER")
-	testPwd := os.Getenv("DATABASE_PASSWORD")
-
 	var err error
-	db, err = database.New("mysql",
-		fmt.Sprintf("%s:%s@tcp(localhost:%s)/%s", testUser, testPwd, dbPort, testDB),
-		10, 10)
+	db, err = database.NewTestDB()
 	if err != nil {
 		log.Fatal("could not connect to test DB", err)
 	}
@@ -43,9 +37,14 @@ func TestMain(m *testing.M) {
 		log.Fatal("could not create fixtures", err)
 	}
 
+	dbHost := utils.MustEnv("DATABASE_HOST")
+	dbPort := utils.MustEnv("DATABASE_PORT")
+	testDB := utils.MustEnv("TEST_DATABASE_NAME")
+	testUser := utils.MustEnv("DATABASE_USER")
+	testPwd := utils.MustEnv("DATABASE_PASSWORD")
 	mg, err = migrate.New(
 		"file://../db/migrations",
-		fmt.Sprintf("mysql://%s:%s@tcp(localhost:%s)/%s", testUser, testPwd, dbPort, testDB),
+		fmt.Sprintf("mysql://%s:%s@tcp(%s:%s)/%s", testUser, testPwd, dbHost, dbPort, testDB),
 	)
 	if err != nil {
 		log.Fatal("could not create migrate", err)

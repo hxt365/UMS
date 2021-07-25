@@ -1,6 +1,7 @@
 package reposistory
 
 import (
+	"Shopee_UMS/utils"
 	"mime/multipart"
 )
 
@@ -13,7 +14,18 @@ type Statics struct {
 	bucketName string
 }
 
-func NewStatics(storage Storage, bucketName string) *Statics {
+func NewStatics(storage Storage) *Statics {
+	bucketName := utils.MustEnv("S3_BUCKET_NAME")
+
+	return &Statics{
+		storage:    storage,
+		bucketName: bucketName,
+	}
+}
+
+func NewTestStatics(storage Storage) *Statics {
+	bucketName := utils.MustEnv("TEST_S3_BUCKET_NAME")
+
 	return &Statics{
 		storage:    storage,
 		bucketName: bucketName,

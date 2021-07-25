@@ -18,7 +18,7 @@ import (
 
 func NewTestServer(au usecases.AuthUsecaser, uu usecases.UserUsecaser) *Server {
 	jwtAuth := entities.JwtAuthenticator{
-		SecretKey:  utils.SampleRSAPrivateKey(),
+		PrivateKey: utils.SampleRSAPrivateKey(),
 		PublicKey:  utils.SampleRSAPublicKey(),
 		ExpSeconds: 10,
 		Issuer:     "Test Server",

@@ -1,10 +1,10 @@
 package api
 
 import (
+	"Shopee_UMS/utils"
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"strconv"
 	"time"
 )
@@ -37,7 +37,7 @@ func respondHTTPErr(w http.ResponseWriter, r *http.Request, status int) {
 	respondErr(w, r, status, http.StatusText(status))
 }
 
-var AuthTokenExpSeconds, _ = strconv.Atoi(os.Getenv("AUTH_TOKEN_EXPIRATION_SECONDS"))
+var AuthTokenExpSeconds, _ = strconv.Atoi(utils.MustEnv("AUTH_TOKEN_EXPIRATION_SECONDS"))
 
 func setAuthToken(w http.ResponseWriter, token string) {
 	exp := time.Now().UTC().Add(time.Duration(AuthTokenExpSeconds) * time.Second)

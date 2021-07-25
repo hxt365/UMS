@@ -20,9 +20,9 @@ type TokenAuthenticator interface {
 }
 
 type JwtAuthenticator struct {
-	SecretKey  *rsa.PrivateKey
+	PrivateKey *rsa.PrivateKey
 	PublicKey  *rsa.PublicKey
-	ExpSeconds int64
+	ExpSeconds int
 	Issuer     string
 }
 
@@ -70,7 +70,7 @@ func (j *JwtAuthenticator) GenerateToken(claim Claim) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, jwtClaim)
-	signedToken, err := token.SignedString(j.SecretKey)
+	signedToken, err := token.SignedString(j.PrivateKey)
 	if err != nil {
 		return "", err
 	}

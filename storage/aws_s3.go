@@ -1,13 +1,13 @@
 package storage
 
 import (
+	"Shopee_UMS/utils"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"mime/multipart"
-	"os"
 )
 
 type S3 struct {
@@ -16,9 +16,9 @@ type S3 struct {
 }
 
 func New() (*S3, error) {
-	accessId := os.Getenv("AWS_ACCESS_KEY_ID")
-	secretKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
-	region := os.Getenv("AWS_REGION")
+	accessId := utils.MustEnv("AWS_ACCESS_KEY_ID")
+	secretKey := utils.MustEnv("AWS_SECRET_ACCESS_KEY")
+	region := utils.MustEnv("AWS_REGION")
 
 	ss, err := session.NewSession(
 		&aws.Config{

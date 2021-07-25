@@ -13,8 +13,6 @@ func (s *Server) handleProfile() http.HandlerFunc {
 			s.handleGetProfile()(w, r)
 		case "PUT":
 			s.handleChangeNickname()(w, r)
-		case "POST":
-			s.handleUploadProfilePicture()(w, r)
 		default:
 			respondHTTPErr(w, r, http.StatusMethodNotAllowed)
 		}
@@ -82,6 +80,11 @@ func (s *Server) handleUploadProfilePicture() http.HandlerFunc {
 	allowedFileType := []string{"image/jpeg", "image/jpg", "image/png"}
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			respondHTTPErr(w, r, http.StatusMethodNotAllowed)
+			return
+		}
+
 		uid, ok := r.Context().Value("uid").(int)
 		if !ok {
 			respondHTTPErr(w, r, http.StatusInternalServerError)

@@ -23,20 +23,20 @@ services:
   #      - 6379:6379
   #    volumes:
   #      - redis_data:/data
-#  app:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    restart: on-failure
-#    env_file:
-#      - .env
-#    command: [ "./main" ]
-#    volumes:
-#      - .:/code
-#    ports:
-#      - 8000:8000
-#    depends_on:
-#      - mysql
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - .env
+    command: [ "./main" ]
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    depends_on:
+      - mysql
 #      - redis
 
 volumes:

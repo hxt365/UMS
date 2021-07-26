@@ -17,15 +17,21 @@ import (
 
 var (
 	db       *sql.DB
+	c        Cache
 	fixtures *testfixtures.Loader
 	mg       *migrate.Migrate
 )
 
 func TestMain(m *testing.M) {
 	var err error
-	db, err = database.NewTestDB()
+	db, err = database.NewTestMySQL()
 	if err != nil {
 		log.Fatal("could not connect to test DB", err)
+	}
+
+	c, err = database.NewTestRedis()
+	if err != nil {
+		log.Fatal("could not connect to Redis", err)
 	}
 
 	fixtures, err = testfixtures.New(
@@ -62,6 +68,9 @@ func setup() {
 	}
 	if err := fixtures.Load(); err != nil {
 		log.Fatal("could not load fixtures", err)
+	}
+	if err := c.FlushAll(); err != nil {
+		log.Fatal("could not flush cache", err)
 	}
 }
 

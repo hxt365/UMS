@@ -15,7 +15,7 @@ type S3 struct {
 	ss     *session.Session
 }
 
-func New() (*S3, error) {
+func NewS3() (*S3, error) {
 	accessId := utils.MustEnv("AWS_ACCESS_KEY_ID")
 	secretKey := utils.MustEnv("AWS_SECRET_ACCESS_KEY")
 	region := utils.MustEnv("AWS_REGION")

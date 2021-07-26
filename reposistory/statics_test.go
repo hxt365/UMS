@@ -11,7 +11,7 @@ import (
 )
 
 func TestStatics_UploadFile(t *testing.T) {
-	s3, err := storage.New()
+	s3, err := storage.NewS3()
 	assert.Nil(t, err, "could not connect to AWS S3")
 	bucketName := utils.MustEnv("TEST_S3_BUCKET_NAME")
 	repo := NewTestStatics(s3)

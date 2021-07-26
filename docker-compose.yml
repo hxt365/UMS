@@ -17,12 +17,12 @@ services:
       - mysql_data:/var/lib/mysql
     ports:
       - ${DATABASE_PORT}:3306
-  #  redis:
-  #    image: 'redis'
-  #    ports:
-  #      - 6379:6379
-  #    volumes:
-  #      - redis_data:/data
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
   app:
     build:
       context: .
@@ -37,8 +37,8 @@ services:
       - 8000:8000
     depends_on:
       - mysql
-#      - redis
+      - redis
 
 volumes:
   mysql_data:
-#  redis_data:
+  redis_data:

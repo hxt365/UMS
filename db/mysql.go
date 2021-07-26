@@ -7,7 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func New(idleConn, maxConn int) (*sql.DB, error) {
+func NewMySQL(idleConn, maxConn int) (*sql.DB, error) {
 	dbHost := utils.MustEnv("DATABASE_HOST")
 	dbPort := utils.MustEnv("DATABASE_PORT")
 	dbName := utils.MustEnv("DATABASE_NAME")
@@ -19,7 +19,7 @@ func New(idleConn, maxConn int) (*sql.DB, error) {
 	return newDB("mysql", dsn, idleConn, maxConn)
 }
 
-func NewTestDB() (*sql.DB, error) {
+func NewTestMySQL() (*sql.DB, error) {
 	dbHost := utils.MustEnv("DATABASE_HOST")
 	dbPort := utils.MustEnv("DATABASE_PORT")
 	dbName := utils.MustEnv("TEST_DATABASE_NAME")

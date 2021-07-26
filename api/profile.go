@@ -50,7 +50,7 @@ func (s *Server) handleChangeNickname() http.HandlerFunc {
 
 		var req request
 		if err := decodeBody(r, &req); err != nil {
-			respondErr(w, r, http.StatusBadRequest, err)
+			respondErr(w, r, http.StatusBadRequest, "malformed request format")
 			return
 		}
 

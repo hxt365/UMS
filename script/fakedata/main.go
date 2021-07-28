@@ -157,7 +157,7 @@ func writeAccountsToCsv(accounts []Account) {
 		})
 	}
 
-	f, err := os.Create("accounts.csv")
+	f, err := os.Create("./data/accounts.csv")
 	defer f.Close()
 
 	if err != nil {
@@ -182,7 +182,7 @@ func writeUsersToCsv(users []User) {
 		})
 	}
 
-	f, err := os.Create("users.csv")
+	f, err := os.Create("./data/users.csv")
 	defer f.Close()
 
 	if err != nil {

@@ -9,7 +9,6 @@ export const COMMON_REQUEST_HEADERS = {
     referer: BASE_URL
 };
 
-export function randomUsername() {
-    const numUsers = 200;
-    return `user${Math.floor(Math.random() * numUsers) + 1}`
+export function randomUsername(maxUsers) {
+    return `user${Math.floor(Math.random() * maxUsers) + 1}`
 };

@@ -14,9 +14,9 @@ services:
       - MYSQL_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
       - TZ=UTC
     volumes:
-#      - ./deployment/mysqlconf:/etc/mysql/conf.d
       - mysql_data:/var/lib/mysql
-#      - /home/hxt365/mysql-files:/var/lib/mysql-files
+      - ./deployment/mysqlconf:/etc/mysql/conf.d
+      - ./script/fakedata/data:/var/lib/mysql-files
     ports:
       - ${DATABASE_PORT}:3306
   redis:
@@ -32,11 +32,12 @@ services:
     restart: on-failure
     env_file:
       - .env
-    command: bash -c "./wait-for-it.sh mysql:${DATABASE_PORT} && ./wait-for-it.sh mysql:${REDIS_PORT} && go build -o main && ./main"
+    command: bash -c "go build -o main && ./main"
     volumes:
       - .:/code
     ports:
       - 8000:8000
+      - 6060:6060
     depends_on:
       - mysql
       - redis

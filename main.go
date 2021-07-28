@@ -10,10 +10,15 @@ import (
 	"Shopee_UMS/utils"
 	"log"
 	"net/http"
+	_ "net/http/pprof"
 	"strconv"
 )
 
 func main() {
+	go func() {
+		log.Println(http.ListenAndServe(":6060", nil))
+	}()
+
 	db, err := database.NewMySQL(10, 10)
 	if err != nil {
 		log.Fatal("could not connect to DB", err)

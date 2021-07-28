@@ -17,20 +17,31 @@ func (s *Server) handleTokenLogin() http.HandlerFunc {
 			return
 		}
 
-		var req request
-		if err := decodeBody(r, &req); err != nil {
-			respondErr(w, r, http.StatusBadRequest, "malformed request format")
-			return
-		}
+		var (
+			uid int
+			err error
+			ok bool
+		)
 
-		uid, err := s.u.Auth.Authenticate(req.Username, req.Password)
-		if err != nil {
-			if _, ok := err.(utils.AuthError); ok {
-				respondErr(w, r, http.StatusBadRequest, err)
+		// check if the user has a valid auth token
+		uid, ok = r.Context().Value(utils.UidContextKey).(int)
+		if !ok {
+			// if no, authenticate him/her
+			var req request
+			if err := decodeBody(r, &req); err != nil {
+				respondErr(w, r, http.StatusBadRequest, "malformed request format")
 				return
 			}
-			respondHTTPErr(w, r, http.StatusInternalServerError)
-			return
+
+			uid, err = s.u.Auth.Authenticate(req.Username, req.Password)
+			if err != nil {
+				if _, ok := err.(utils.AuthError); ok {
+					respondErr(w, r, http.StatusBadRequest, err)
+					return
+				}
+				respondHTTPErr(w, r, http.StatusInternalServerError)
+				return
+			}
 		}
 
 		auth, ok := s.auth.(entities.TokenAuthenticator)

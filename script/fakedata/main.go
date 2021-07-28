@@ -5,10 +5,11 @@ import (
 	"database/sql"
 	"encoding/csv"
 	"fmt"
-	"github.com/brianvoe/gofakeit"
-	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"os"
+
+	"github.com/brianvoe/gofakeit"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 const NumRecords = 10000000
@@ -51,7 +52,7 @@ func main() {
 		accounts = append(accounts, Account{
 			id:        i,
 			username:  fmt.Sprintf("user%d", i),
-			password:  "$2a$10$Aub2w87Kx/9t3yh4hWcB3.w0A.x6K36X3kKKeSD32pJ5RdFTd312i", // bcrypt of "secret", cost=10
+			password:  "$2a$04$9OdByb6A1gwSs.oU26H8duMmakl7T6M8ZXL4bOrl6ieJ0M3HKpGlu", // bcrypt of "secret", cost=4
 			createdAt: "2018-09-12 22:35:56",
 			updatedAt: "2018-09-12 22:35:56",
 		})

@@ -3,9 +3,10 @@ package entities
 import (
 	"crypto/rsa"
 	"fmt"
+	"time"
+
 	jwt "github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
-	"time"
 )
 
 type Claim interface{}

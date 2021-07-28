@@ -4,14 +4,14 @@ import {BASE_URL, COMMON_REQUEST_HEADERS, randomUsername} from "./utils.js";
 
 export let options = {
     stages: [
-        {duration: '1m', target: 1},
+        {duration: '30s', target: 100},
     ],
 };
 
 export default function () {
     const res = http.post(
         `${BASE_URL}/auth/login`,
-        `{"username":"${randomUsername(1)}", "password": "secret"}`,
+        `{"username":"${randomUsername(200)}", "password": "secret"}`,
         {
             tags: {name: '/login'},
             headers: COMMON_REQUEST_HEADERS,

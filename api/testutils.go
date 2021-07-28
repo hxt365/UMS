@@ -46,7 +46,7 @@ func login(t *testing.T, s *Server) *httptest.ResponseRecorder {
 
 func extractAuthCookie(w *httptest.ResponseRecorder) *http.Cookie {
 	for _, c := range w.Result().Cookies() {
-		if c.Name == "auth-token" {
+		if c.Name == utils.AuthCookieKey {
 			return c
 		}
 	}

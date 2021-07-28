@@ -63,7 +63,7 @@ func TestAuth_Logout(t *testing.T) {
 	w := login(t, s)
 	req := httptest.NewRequest("POST", "/api/auth/logout", nil)
 	req.AddCookie(extractAuthCookie(w))
-	req.Header.Add("X-CSRFToken", w.Header().Get("X-CSRFToken"))
+	req.Header.Add(utils.CSRFHeaderName, w.Header().Get(utils.CSRFHeaderName))
 	w = httptest.NewRecorder()
 	s.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusOK, w.Code)

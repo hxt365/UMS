@@ -42,7 +42,7 @@ var AuthTokenExpSeconds, _ = strconv.Atoi(utils.MustEnv("AUTH_TOKEN_EXPIRATION_S
 func setAuthToken(w http.ResponseWriter, token string) {
 	exp := time.Now().UTC().Add(time.Duration(AuthTokenExpSeconds) * time.Second)
 	cookie := http.Cookie{
-		Name:     "auth-token",
+		Name:     utils.AuthCookieKey,
 		Value:    token,
 		Path:     "/",
 		Expires:  exp,
@@ -52,12 +52,12 @@ func setAuthToken(w http.ResponseWriter, token string) {
 }
 
 func setCsrfToken(w http.ResponseWriter, token string) {
-	w.Header().Set("X-CSRFToken", token)
+	w.Header().Set(utils.CSRFHeaderName, token)
 }
 
 func removeAuthToken(w http.ResponseWriter) {
 	cookie := http.Cookie{
-		Name:     "auth-token",
+		Name:     utils.AuthCookieKey,
 		Value:    "",
 		Path:     "/",
 		Expires:  time.Unix(0, 0),

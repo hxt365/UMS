@@ -14,7 +14,7 @@ services:
       - MYSQL_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
       - TZ=UTC
     volumes:
-      - ./mysqlconf:/etc/mysql/conf.d
+#      - ./deployment/mysqlconf:/etc/mysql/conf.d
       - mysql_data:/var/lib/mysql
 #      - /home/hxt365/mysql-files:/var/lib/mysql-files
     ports:

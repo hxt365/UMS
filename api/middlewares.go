@@ -15,7 +15,7 @@ func (s *Server) withJwtAuth(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		authCookie := utils.ExtractReqCookie(r, "auth-token")
+		authCookie := utils.ExtractReqAuthCookie(r, utils.AuthCookieKey)
 		if authCookie == nil {
 			respondHTTPErr(w, r, http.StatusUnauthorized)
 			return
@@ -34,8 +34,8 @@ func (s *Server) withJwtAuth(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), "uid", jwtClaim.Uid)
-		ctx = context.WithValue(ctx, "csrf", jwtClaim.CsrfToken)
+		ctx := context.WithValue(r.Context(), utils.UidContextKey, jwtClaim.Uid)
+		ctx = context.WithValue(ctx, utils.CsrfContextKey, jwtClaim.CsrfToken)
 		next(w, r.WithContext(ctx))
 	}
 }
@@ -45,8 +45,8 @@ func (s *Server) withCSRF(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "POST", "PUT", "PATCH", "DELETE":
-			csrfHeader := r.Header.Get("X-CSRFToken")
-			csrfToken := r.Context().Value("csrf")
+			csrfHeader := r.Header.Get(utils.CSRFHeaderName)
+			csrfToken := r.Context().Value(utils.CsrfContextKey)
 			if csrfToken != csrfHeader {
 				respondHTTPErr(w, r, http.StatusForbidden)
 				return

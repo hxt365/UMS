@@ -19,5 +19,8 @@ func ValidateUserNickname(name string) error {
 	if len(name) > 255 {
 		return utils.ValidationError{"nickname is too long"}
 	}
+	if len(name) == 0 {
+		return utils.ValidationError{"nickname is empty"}
+	}
 	return nil
 }

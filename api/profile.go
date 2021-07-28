@@ -21,7 +21,7 @@ func (s *Server) handleProfile() http.HandlerFunc {
 
 func (s *Server) handleGetProfile() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		uid, ok := r.Context().Value("uid").(int)
+		uid, ok := r.Context().Value(utils.UidContextKey).(int)
 		if !ok {
 			respondHTTPErr(w, r, http.StatusInternalServerError)
 			return
@@ -42,7 +42,7 @@ func (s *Server) handleChangeNickname() http.HandlerFunc {
 		Nickname string `json:"nickname"`
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		uid, ok := r.Context().Value("uid").(int)
+		uid, ok := r.Context().Value(utils.UidContextKey).(int)
 		if !ok {
 			respondHTTPErr(w, r, http.StatusInternalServerError)
 			return
@@ -85,7 +85,7 @@ func (s *Server) handleUploadProfilePicture() http.HandlerFunc {
 			return
 		}
 
-		uid, ok := r.Context().Value("uid").(int)
+		uid, ok := r.Context().Value(utils.UidContextKey).(int)
 		if !ok {
 			respondHTTPErr(w, r, http.StatusInternalServerError)
 			return

@@ -4,7 +4,7 @@ import {BASE_URL, COMMON_REQUEST_HEADERS, randomUsername} from "./utils.js";
 
 export let options = {
     stages: [
-        {duration: '30s', target: 100},
+        {duration: '30s', target: 500},
     ],
 };
 

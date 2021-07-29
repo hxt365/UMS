@@ -1,7 +1,7 @@
 import { FormData } from 'https://jslib.k6.io/formdata/0.0.2/index.js';
 import http from 'k6/http';
 
-export const BASE_URL = 'http://localhost:8000/api';
+export const BASE_URL = 'http://192.168.9.103:8000/api';
 
 export let COMMON_REQUEST_HEADERS = {
     dnt: '1',

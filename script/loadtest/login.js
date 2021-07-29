@@ -11,7 +11,7 @@ export let options = {
 export default function () {
     const res = http.post(
         `${BASE_URL}/auth/login`,
-        `{"username":"${randomUsername(200)}", "password": "secret"}`,
+        `{"username":"${randomUsername(10000000)}", "password": "secret"}`,
         {
             tags: {name: '/login'},
             headers: COMMON_REQUEST_HEADERS,

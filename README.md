@@ -4,4 +4,4 @@ In this User Management System project, I designed, implemented a robust, distri
 
 ## Documentation
 
-Available on [Notion](https://hxt365.notion.site/User-Management-System-Golang-2c7aaeb9b35a4ca2b63eff2c495c3d62)
+Most time and efforts are spent on system design for the project. Documentation is available on [Notion](https://hxt365.notion.site/User-Management-System-Golang-2c7aaeb9b35a4ca2b63eff2c495c3d62)
